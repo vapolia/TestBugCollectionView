@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TestBugCollectionView.Views.AboutPage"
+             xmlns:vm="clr-namespace:TestBugCollectionView.ViewModels"
+             xmlns:xamForms="clr-namespace:XamSvg.XamForms;assembly=XamSvg.XamForms"
+             Title="{Binding Title}"
+             x:Name="ThePage"
+             x:DataType="vm:AboutViewModel"
+             Shell.NavBarIsVisible="False"
+             >
+
+             <ContentPage.BindingContext>
+        <vm:AboutViewModel />
+    </ContentPage.BindingContext>
+    
+    <StackLayout Orientation="Vertical" Padding="30,24,30,24" Spacing="10">
+        <Label Text="Sample bug of CollectionView button. The button can not be clicked anymore when you open an item then come back. Removing Shell.NavBarIsVisible='False' fix it, but the navbar stays visible." FontSize="Body"/>
+
+        <CollectionView x:Name="Collection"
+                        VerticalOptions="FillAndExpand" ItemSizingStrategy="MeasureAllItems" ItemsLayout="VerticalList" 
+                        IsGrouped="True" ItemsSource="{Binding Items}"
+                        SelectionChangedCommand="{Binding SelectItemCommand}"
+                        SelectionChangedCommandParameter="{Binding SelectedItem,Source={x:Reference Collection}}"
+                        SelectionMode="Single">
+
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate x:DataType="vm:GroupViewModel">
+                    <Button 
+                            Command="{Binding BindingContext.TapHeaderCommand,Source={x:Reference ThePage}}" 
+                            ImageSource="{xamForms:Svg menu.svg,ColorMapping='000=CBB',Height=60}" />
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:ItemViewModel">
+                    <StackLayout Spacing="0">
+                        <StackLayout Orientation="Horizontal" Padding="10">
+                            <Label Text="Item #" />
+                            <Label Text="{Binding ItemId}" />
+                        </StackLayout>
+                        <Line HeightRequest="1" BackgroundColor="LightGray" Margin="0,10,0,0" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+    </StackLayout>
+
+</ContentPage>
